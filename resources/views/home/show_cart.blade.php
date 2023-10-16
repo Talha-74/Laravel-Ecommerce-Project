@@ -21,6 +21,29 @@
         <link href="home/css/style.css" rel="stylesheet" />
         <!-- responsive style -->
         <link href="home/css/responsive.css" rel="stylesheet" />
+
+        <style type="text/css">
+            .center {
+                margin: auto;
+                width: 50%;
+                padding: 30px;
+                text-align: center;
+            }
+
+            table,
+            th,
+            td {
+                border: 1px solid skyblue;
+                /* border-collapse: collapse; */
+            }
+
+            .th-deg {
+                border: 2px solid skyblue;
+                background: skyblue;
+                font-size: 15px;
+                padding: 5px;
+            }
+        </style>
     </head>
 
     <body>
@@ -28,9 +51,44 @@
             <!-- header section strats -->
             @include('home.header');
             <!-- end header section -->
-            </div>
 
-          
+            <div class="center">
+                <table class="table ">
+                    <tr>
+                        <th class="th-deg">Product title</th>
+                        <th class="th-deg">Product quantity</th>
+                        <th class="th-deg">Price</th>
+                        <th class="th-deg">Image</th>
+                        <th class="th-deg">Action</th>
+                    </tr>
+
+                    <?php $totalprice = 0; ?>
+
+                    @foreach ($cart as $cart)
+                        <tr>
+                            <td>{{ $cart->product_title }}</td>
+                            <td>{{ $cart->quantity }}</td>
+                            <td>{{ $cart->price }}</td>
+                            <td><img src="/product/{{ $cart->image }}" alt="" width="70px" height="70px">
+                            </td>
+                            <td><a href="{{url('remove_cart', $cart->id)}}" class="btn btn-danger" onclick="return confirm('Are you sure to remove the product?')">Remove</a></td>
+                        </tr>
+                        <?php $totalprice = $totalprice + $cart->price; ?>
+                    @endforeach
+                </table>
+                <h5>Total Price: {{$totalprice}}</h5>
+
+                @if (session()->has('message'))
+                <div class="alert alert-success" style="display: flex; align-items: center;">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" aria-hidden="true"
+                        style="margin-left: auto; margin-right: 0;"
+                        onclick="this.parentElement.style.display='none'">X</button>
+                </div>
+            @endif
+
+            </div>
+            
 
             <!-- footer start -->
             @include('home.footer');
